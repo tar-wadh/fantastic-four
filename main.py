@@ -19,39 +19,49 @@ def hello_world():
     """hello world"""
     return 'Hello World!'
 
-@app.route('/pubsub/receive', methods=['POST'])
-def pubsub_receive():
-    """dumps a received pubsub message to the log"""
+@app.route('/api/status', methods=['GET'])
+def status():
+    api_status = {}
+    api_status["insert"] = False
+    api_status["fetch"] = False
+    api_status["delete"] = False
+    api_status["list"] = False
 
-    data = {}
-    try:
-        obj = request.get_json()
-        utility.log_info(json.dumps(obj))
+    return jsonify(api_status), 200
 
-        data = base64.b64decode(obj['message']['data'])
-        utility.log_info(data)
-
-    except Exception as e:
-        # swallow up exceptions
-        logging.exception('Oops!')
-
-    return jsonify(data), 200
-
-
-@app.route('/notes', methods=['POST', 'GET'])
-def access_notes():
-    """inserts and retrieves notes from datastore"""
-
-    book = notebook.NoteBook()
-    if request.method == 'GET':
-        results = book.fetch_notes()
-        result = [notebook.parse_note_time(obj) for obj in results]
-        return jsonify(result)
-    elif request.method == 'POST':
-        print json.dumps(request.get_json())
-        text = request.get_json()['text']
-        book.store_note(text)
-        return "done"
+#@app.route('/pubsub/receive', methods=['POST'])
+#def pubsub_receive():
+#    """dumps a received pubsub message to the log"""
+#
+#    data = {}
+#    try:
+#        obj = request.get_json()
+#        utility.log_info(json.dumps(obj))
+#
+#        data = base64.b64decode(obj['message']['data'])
+#        utility.log_info(data)
+#
+#    except Exception as e:
+#        # swallow up exceptions
+#        logging.exception('Oops!')
+#
+#    return jsonify(data), 200
+#
+#
+#@app.route('/notes', methods=['POST', 'GET'])
+#def access_notes():
+#    """inserts and retrieves notes from datastore"""
+#
+#    book = notebook.NoteBook()
+#    if request.method == 'GET':
+#        results = book.fetch_notes()
+#        result = [notebook.parse_note_time(obj) for obj in results]
+#        return jsonify(result)
+#    elif request.method == 'POST':
+#        print json.dumps(request.get_json())
+#        text = request.get_json()['text']
+#        book.store_note(text)
+#        return "done"
 
 
 @app.errorhandler(500)
