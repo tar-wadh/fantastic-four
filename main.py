@@ -7,7 +7,7 @@ import base64
 from flask import Flask, request
 from flask import jsonify
 
-import notebook
+import capital
 import utility
 
 
@@ -48,20 +48,13 @@ def status():
 #    return jsonify(data), 200
 #
 #
-#@app.route('/notes', methods=['POST', 'GET'])
-#def access_notes():
-#    """inserts and retrieves notes from datastore"""
-#
-#    book = notebook.NoteBook()
-#    if request.method == 'GET':
-#        results = book.fetch_notes()
-#        result = [notebook.parse_note_time(obj) for obj in results]
-#        return jsonify(result)
-#    elif request.method == 'POST':
-#        print json.dumps(request.get_json())
-#        text = request.get_json()['text']
-#        book.store_note(text)
-#        return "done"
+@app.route('/api/capitals', methods=['PUT'])
+def put_captal():
+    """inserts capital from datastore"""
+    cap = capital.Capital()
+    text = request.get_json()
+    cap.insert_capital(text)
+    return "done"
 
 
 @app.errorhandler(500)

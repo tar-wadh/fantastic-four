@@ -7,15 +7,18 @@ class Capital:
 
     def __init__(self):
         self.ds = datastore.Client(project=utility.project_id())
-        self.kind = "Note"
+        self.kind = "Capital"
 
-    def insert_capital(self, comment):
+    def insert_capital(self, data):
         key = self.ds.key(self.kind)
         entity = datastore.Entity(key)
-
-        entity['text'] = comment
-        entity['timestamp'] = datetime.utcnow()
-
+        entity["name"] = data["name"]
+        entity["countryCode"] = data["countryCode"]
+        entity["country"] = data["country"]
+        entity["id"] = data["id"]
+        entity["location"]["latitude"] = data["location"]["latitude"]
+        #entity["location"]["longitude"] = data["location"]["longitude"]
+        entity["continent"] = data["continent"]
         return self.ds.put(entity)
 
     def fetch_capitals(self):
