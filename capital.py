@@ -23,20 +23,38 @@ class Capital:
         return self.ds.put(entity)
 
     def fetch_capitals(self):
-        query = self.ds.query(kind=self.kind)
-        query.order = ['id']
-        city = []
-        for ent in list(query.fetch(limit=5)):
-          city.append(dict(ent))
-        return jsonify (city)
+        empty_city = {}
+        empty_city["code"] = 0
+        empty_city["message"] = "string"
+        try:
+            query = self.ds.query(kind=self.kind)
+            query.order = ['id']
+            city = []
+            for ent in list(query.fetch(limit=5)):
+                city.append(dict(ent))
+            if len(city) != 0:
+                return jsonify (city),200
+            else:
+                return jsonify (empty_city),404
+        except Exception as e:
+            return jsonify (empty_city)
 
     def get_capital(self,id):
-        query = self.ds.query(kind=self.kind)
-        query.add_filter('id','=',id)
-        city = []
-        for ent in list(query.fetch()):
-          city.append(dict(ent))
-        return jsonify (city)
+        empty_city = {}
+        empty_city["code"] = 0
+        empty_city["message"] = "string"
+        try:
+            query = self.ds.query(kind=self.kind)
+            query.add_filter('id','=',id)
+            city = []
+            for ent in list(query.fetch()):
+                city.append(dict(ent))
+            if len(city) != 0:
+                return jsonify (city),200
+            else:
+                return jsonify (empty_city),404
+        except Exception as e:
+            return jsonify (empty_city)
 
     def get_query_results(self, query):
         results = list()
