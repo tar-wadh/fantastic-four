@@ -49,12 +49,14 @@ def status():
 #
 #@app.route('/api/capitals/<id>/', methods=['PUT'])
 
-@app.route('/api/capitals/<id>/', methods=['GET','PUT'])
+@app.route('/api/capitals/<id>/', methods=['GET','PUT', 'DELETE'])
 def get_put_capital(id):
     if request.method == 'GET':
       return get_capital (int(id))
     elif request.method == 'PUT':
       return put_capital (int(id))
+    elif request.method == 'DELETE':
+      return delete_capital (int(id))
       
 def put_capital(id):
    """inserts capital from datastore"""
@@ -66,6 +68,11 @@ def put_capital(id):
 def get_capital(id):
     cap = capital.Capital_Service()
     result = cap.get_capital(id)
+    return result
+
+def delete_capital(id):
+    cap = capital.Capital_Service()
+    result = cap.delete_capital(id)
     return result
 
 @app.route('/api/capitals', methods=['GET'])

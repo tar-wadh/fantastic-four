@@ -1,6 +1,6 @@
 from datetime import datetime
 from google.cloud import datastore
-from flask import jsonify
+from flask import jsonify, make_response
 import utility
 import json
 
@@ -25,7 +25,8 @@ class Capital_Service:
             entity["longitude"] = data["location"]["longitude"]
             entity["continent"] = data["continent"]
             self.ds.put(entity)
-            return jsonify("Successfully stored the capital"),200 
+            return  make_response("Successfully stored the capital", 200)
+            #return jsonify("Successfully stored the capital"),200 
         except Exception as e:
             return jsonify (empty_city)
 
@@ -62,9 +63,27 @@ class Capital_Service:
             if len(city) != 0:
                 return jsonify(self.good_json(city[0])),200
             else:
-                return jsonify (empty_city),404
+                return make_response("Capital record not found", 404)
         except Exception as e:
             return jsonify (empty_city)
+        
+    def delete_capital(self,id):
+        empty_city = {}
+        empty_city["code"] = 0
+        empty_city["message"] = "string"
+        #try:
+        query = self.ds.query(kind=self.kind)
+        query.add_filter('id','=',id)
+        entity_list = list(query.fetch())
+        
+        if len(entity_list) == 0:
+            return make_response("Capital record not found", 404)
+        
+        for ent in entity_list:
+            self.ds.delete(ent.key)
+            
+        return make_response ("Capital object delete status",200)
+    
 
     def get_query_results(self, query):
         results = list()
@@ -85,10 +104,3 @@ class Capital_Service:
         good_obj["continent"] = obj["continent"]
         return good_obj
 
-
-def parse_captals_time(note):
-    """converts a greeting to an object"""
-    return {
-        'text': note['text'],
-        'timestamp': note['timestamp'].strftime('%Y-%m-%d %H:%M:%S')
-    }
