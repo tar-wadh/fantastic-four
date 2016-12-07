@@ -62,6 +62,12 @@ def get_capital(id):
     result = cap.get_capital(id)
     return result
 
+@app.route('/api/capitals', methods=['GET'])
+def get_all_capitals():
+    cap = capital.Capital()
+    result = cap.fetch_capitals()
+    return result
+
 
 
 @app.errorhandler(500)

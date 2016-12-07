@@ -24,8 +24,11 @@ class Capital:
 
     def fetch_capitals(self):
         query = self.ds.query(kind=self.kind)
-        query.order = ['-timestamp']
-        return self.get_query_results(query)
+        query.order = ['id']
+        city = []
+        for ent in list(query.fetch(limit=5)):
+          city.append(dict(ent))
+        return jsonify (city)
 
     def get_capital(self,id):
         query = self.ds.query(kind=self.kind)
