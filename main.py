@@ -57,6 +57,7 @@ def put_capital(id):
 
 @app.route('/api/capitals/<id>', methods=['GET'])
 def get_capital(id):
+    print id
     cap = capital.Capital()
     result = cap.get_capital(id)
     return result

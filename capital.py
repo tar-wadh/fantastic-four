@@ -48,9 +48,9 @@ class Capital_Service:
             query.add_filter('id','=',id)
             city = []
             for ent in list(query.fetch()):
-                city.append(dict(ent))
+		city.append(dict(updated_ent))
             if len(city) != 0:
-                return jsonify (city),200
+                return good_json(jsonify (city)),200
             else:
                 return jsonify (empty_city),404
         except Exception as e:
@@ -61,6 +61,14 @@ class Capital_Service:
         for entity in list(query.fetch()):
             results.append(dict(entity))
         return results
+
+    def good_json (self,obj):
+	obj["location"]["latitude"] = obj["latitude"]
+	obj["location"]["longitude"] = obj["longitude"]
+	del obj["latitude"]
+	del obj["longitude"]
+	print obj
+	return obj
 
 
 def parse_captals_time(note):
