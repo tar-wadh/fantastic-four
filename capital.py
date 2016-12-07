@@ -3,13 +3,13 @@ from google.cloud import datastore
 import utility
 
 
-class NoteBook:
+class Capital:
 
     def __init__(self):
         self.ds = datastore.Client(project=utility.project_id())
         self.kind = "Note"
 
-    def store_note(self, comment):
+    def insert_capital(self, comment):
         key = self.ds.key(self.kind)
         entity = datastore.Entity(key)
 
@@ -18,7 +18,7 @@ class NoteBook:
 
         return self.ds.put(entity)
 
-    def fetch_notes(self):
+    def fetch_capitals(self):
         query = self.ds.query(kind=self.kind)
         query.order = ['-timestamp']
         return self.get_query_results(query)
@@ -30,7 +30,7 @@ class NoteBook:
         return results
 
 
-def parse_note_time(note):
+def parse_captals_time(note):
     """converts a greeting to an object"""
     return {
         'text': note['text'],
