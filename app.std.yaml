@@ -2,7 +2,6 @@
 runtime: python27
 api_version: 1
 threadsafe: true
-service: talk-demo
 
 handlers:
 - url: /.*
@@ -20,4 +19,4 @@ skip_files:
 - (venv/lib/python2.7/site-packages/appengine_sdk.*)
 - (venv/lib/python2.7/site-packages/setuptools/.*)
 - (venv/lib/python2.7/site-packages/nose.*)
-- (venv/lib/python2.7/site-packages/pip.*)
+- (venv/lib/python2.7/site-pacskages/pip.*)
