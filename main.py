@@ -49,12 +49,19 @@ def status():
 #
 #
 @app.route('/api/capitals', methods=['PUT'])
-def put_captal():
+def put_capital():
     """inserts capital from datastore"""
     cap = capital.Capital()
     text = request.get_json()
     cap.insert_capital(text)
     return "done"
+
+@app.route('/api/capitals/<id>', methods=['GET'])
+def get_capital(id):
+    cap = capital.Capital()
+    result = cap.get_capital(id)
+    return result
+
 
 
 @app.errorhandler(500)

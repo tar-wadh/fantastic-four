@@ -1,7 +1,8 @@
 from datetime import datetime
 from google.cloud import datastore
+from flask import jsonify
 import utility
-
+import json
 
 class Capital:
 
@@ -25,6 +26,14 @@ class Capital:
         query = self.ds.query(kind=self.kind)
         query.order = ['-timestamp']
         return self.get_query_results(query)
+
+    def get_capital(self,id):
+        query = self.ds.query(kind=self.kind)
+        query.add_filter('id','=',id)
+        city = []
+        for ent in list(query.fetch()):
+          city.append(dict(ent))
+        return jsonify (city)
 
     def get_query_results(self, query):
         results = list()
