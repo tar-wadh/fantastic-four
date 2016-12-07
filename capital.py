@@ -43,18 +43,18 @@ class Capital_Service:
         empty_city = {}
         empty_city["code"] = 0
         empty_city["message"] = "string"
-        try:
-            query = self.ds.query(kind=self.kind)
-            query.add_filter('id','=',id)
-            city = []
-            for ent in list(query.fetch()):
-		city.append(dict(updated_ent))
-            if len(city) != 0:
-                return good_json(jsonify (city)),200
-            else:
-                return jsonify (empty_city),404
-        except Exception as e:
-            return jsonify (empty_city)
+        #try:
+        query = self.ds.query(kind=self.kind)
+        query.add_filter('id','=',id)
+        city = []
+        for ent in list(query.fetch()):
+		        city.append(dict(ent))
+        if len(city) != 0:
+            return self.good_json(city[0]),200
+        else:
+            return jsonify (empty_city),404
+        #except Exception as e:
+        return jsonify (empty_city),305
 
     def get_query_results(self, query):
         results = list()
@@ -63,12 +63,17 @@ class Capital_Service:
         return results
 
     def good_json (self,obj):
-	obj["location"]["latitude"] = obj["latitude"]
-	obj["location"]["longitude"] = obj["longitude"]
-	del obj["latitude"]
-	del obj["longitude"]
-	print obj
-	return obj
+        good_obj = {}
+        location = {}
+        good_obj["name"] = obj["name"]
+        good_obj["countryCode"] = obj["countryCode"]
+        good_obj["country"] = obj["country"]
+        good_obj["id"] = obj["id"]
+        location["latitude"] = obj["latitude"]
+        location["longitude"] = obj["longitude"]
+        good_obj["location"] = location
+        good_obj["continent"] = obj["continent"]
+        return jsonify(good_obj)
 
 
 def parse_captals_time(note):

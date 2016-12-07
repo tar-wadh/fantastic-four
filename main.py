@@ -47,24 +47,30 @@ def status():
 #    return jsonify(data), 200
 #
 #
-@app.route('/api/capitals/<id>/', methods=['PUT'])
-def put_capital(id):
-    """inserts capital from datastore"""
-    cap_service = capital.Capital_Service()
-    text = request.get_json()
-    cap_service.insert_capital(id, text)
-    return jsonify("Done"), 200
+#@app.route('/api/capitals/<id>/', methods=['PUT'])
 
-@app.route('/api/capitals/<id>', methods=['GET'])
+@app.route('/api/capitals/<id>/', methods=['GET','PUT'])
+def get_put_capital(id):
+    if request.method == 'GET':
+      return get_capital (id)
+    elif request.method == 'PUT':
+      return put_capital (id)
+      
+def put_capital(id):
+   """inserts capital from datastore"""
+   cap_service = capital.Capital_Service()
+   text = request.get_json()
+   cap_service.insert_capital(id, text)
+   return jsonify("Done"), 200
+
 def get_capital(id):
-    print id
-    cap = capital.Capital()
+    cap = capital.Capital_Service()
     result = cap.get_capital(id)
     return result
 
 @app.route('/api/capitals', methods=['GET'])
 def get_all_capitals():
-    cap = capital.Capital()
+    cap = capital.Capital_Service()
     result = cap.fetch_capitals()
     return result
 
