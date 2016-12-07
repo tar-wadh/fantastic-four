@@ -21,10 +21,10 @@ def hello_world():
 @app.route('/api/status', methods=['GET'])
 def status():
     api_status = {}
-    api_status["insert"] = False
-    api_status["fetch"] = False
-    api_status["delete"] = False
-    api_status["list"] = False
+    api_status["insert"] = True
+    api_status["fetch"] = True
+    api_status["delete"] = True
+    api_status["list"] = True
 
     return jsonify(api_status), 200
 
@@ -52,16 +52,16 @@ def status():
 @app.route('/api/capitals/<id>/', methods=['GET','PUT'])
 def get_put_capital(id):
     if request.method == 'GET':
-      return get_capital (id)
+      return get_capital (int(id))
     elif request.method == 'PUT':
-      return put_capital (id)
+      return put_capital (int(id))
       
 def put_capital(id):
    """inserts capital from datastore"""
    cap_service = capital.Capital_Service()
    text = request.get_json()
-   cap_service.insert_capital(id, text)
-   return jsonify("Done"), 200
+   result = cap_service.insert_capital(id, text)
+   return result
 
 def get_capital(id):
     cap = capital.Capital_Service()

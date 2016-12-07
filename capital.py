@@ -11,16 +11,23 @@ class Capital_Service:
         self.kind = "Capital"
 
     def insert_capital(self, id, data):
-        key = self.ds.key(self.kind)
-        entity = datastore.Entity(key)
-        entity["name"] = data["name"]
-        entity["countryCode"] = data["countryCode"]
-        entity["country"] = data["country"]
-        entity["id"] = id
-        entity["latitude"] = data["location"]["latitude"]
-        entity["longitude"] = data["location"]["longitude"]
-        entity["continent"] = data["continent"]
-        return self.ds.put(entity) 
+        empty_city = {}
+        empty_city["code"] = 0
+        empty_city["message"] = "string"
+        try:
+            key = self.ds.key(self.kind)
+            entity = datastore.Entity(key)
+            entity["name"] = data["name"]
+            entity["countryCode"] = data["countryCode"]
+            entity["country"] = data["country"]
+            entity["id"] = id
+            entity["latitude"] = data["location"]["latitude"]
+            entity["longitude"] = data["location"]["longitude"]
+            entity["continent"] = data["continent"]
+            self.ds.put(entity)
+            return jsonify("Successfully stored the capital"),200 
+        except Exception as e:
+            return jsonify (empty_city)
 
     def fetch_capitals(self):
         empty_city = {}
@@ -32,8 +39,11 @@ class Capital_Service:
             city = []
             for ent in list(query.fetch(limit=5)):
                 city.append(dict(ent))
+            results = []
+            for c in city:
+              results.append(self.good_json(c))
             if len(city) != 0:
-                return jsonify (city),200
+                return jsonify(results),200
             else:
                 return jsonify (empty_city),404
         except Exception as e:
@@ -43,18 +53,18 @@ class Capital_Service:
         empty_city = {}
         empty_city["code"] = 0
         empty_city["message"] = "string"
-        #try:
-        query = self.ds.query(kind=self.kind)
-        query.add_filter('id','=',id)
-        city = []
-        for ent in list(query.fetch()):
-		        city.append(dict(ent))
-        if len(city) != 0:
-            return self.good_json(city[0]),200
-        else:
-            return jsonify (empty_city),404
-        #except Exception as e:
-        return jsonify (empty_city),305
+        try:
+            query = self.ds.query(kind=self.kind)
+            query.add_filter('id','=',id)
+            city = []
+            for ent in list(query.fetch()):
+		            city.append(dict(ent))
+            if len(city) != 0:
+                return jsonify(self.good_json(city[0])),200
+            else:
+                return jsonify (empty_city),404
+        except Exception as e:
+            return jsonify (empty_city)
 
     def get_query_results(self, query):
         results = list()
@@ -73,7 +83,7 @@ class Capital_Service:
         location["longitude"] = obj["longitude"]
         good_obj["location"] = location
         good_obj["continent"] = obj["continent"]
-        return jsonify(good_obj)
+        return good_obj
 
 
 def parse_captals_time(note):
