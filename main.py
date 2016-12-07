@@ -4,12 +4,11 @@ import logging
 import json
 import base64
 
-from flask import Flask, request
+from flask import Flask, request, g
 from flask import jsonify
 
 import capital
 import utility
-
 
 app = Flask(__name__)
 
@@ -48,13 +47,13 @@ def status():
 #    return jsonify(data), 200
 #
 #
-@app.route('/api/capitals', methods=['PUT'])
-def put_capital():
+@app.route('/api/capitals/<id>/', methods=['PUT'])
+def put_capital(id):
     """inserts capital from datastore"""
-    cap = capital.Capital()
+    cap_service = capital.Capital_Service()
     text = request.get_json()
-    cap.insert_capital(text)
-    return "done"
+    cap_service.insert_capital(id, text)
+    return jsonify("Done"), 200
 
 @app.route('/api/capitals/<id>', methods=['GET'])
 def get_capital(id):

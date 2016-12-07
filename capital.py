@@ -4,23 +4,23 @@ from flask import jsonify
 import utility
 import json
 
-class Capital:
+class Capital_Service:
 
     def __init__(self):
         self.ds = datastore.Client(project=utility.project_id())
         self.kind = "Capital"
 
-    def insert_capital(self, data):
+    def insert_capital(self, id, data):
         key = self.ds.key(self.kind)
         entity = datastore.Entity(key)
         entity["name"] = data["name"]
         entity["countryCode"] = data["countryCode"]
         entity["country"] = data["country"]
-        entity["id"] = data["id"]
-        entity["location"]["latitude"] = data["location"]["latitude"]
-        #entity["location"]["longitude"] = data["location"]["longitude"]
+        entity["id"] = id
+        entity["latitude"] = data["location"]["latitude"]
+        entity["longitude"] = data["location"]["longitude"]
         entity["continent"] = data["continent"]
-        return self.ds.put(entity)
+        return self.ds.put(entity) 
 
     def fetch_capitals(self):
         empty_city = {}
