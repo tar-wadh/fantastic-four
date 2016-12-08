@@ -25,6 +25,8 @@ def status():
     api_status["fetch"] = True
     api_status["delete"] = True
     api_status["list"] = True
+    api_status["pubsub"] = True
+    api_status["storage"] = False
 
     return jsonify(api_status), 200
 
@@ -81,6 +83,12 @@ def get_all_capitals():
     result = cap.fetch_capitals()
     return result
 
+@app.route('/api/capitals/<id>/publish', methods=['POST'])
+def publish(id):
+    cap = capital.Capital_Service()
+    ob = request.get_json()
+    result = cap.publish_capital(int(id),ob)
+    return result
 
 
 @app.errorhandler(500)

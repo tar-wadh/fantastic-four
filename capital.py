@@ -1,5 +1,6 @@
 from datetime import datetime
 from google.cloud import datastore
+from google.cloud import pubsub
 from flask import jsonify, make_response
 import utility
 import json
@@ -50,9 +51,6 @@ class Capital_Service:
             return jsonify (empty_city)
 
     def get_capital(self,id):
-        empty_city = {}
-        empty_city["code"] = 0
-        empty_city["message"] = "string"
         try:
             query = self.ds.query(kind=self.kind)
             query.add_filter('id','=',id)
@@ -60,11 +58,11 @@ class Capital_Service:
             for ent in list(query.fetch()):
 		            city.append(dict(ent))
             if len(city) != 0:
-                return jsonify(self.good_json(city[0])),200
+                return make_response(jsonify(self.good_json(city[0])),200)
             else:
                 return make_response("Capital record not found", 404)
         except Exception as e:
-            return jsonify (empty_city)
+            return make_response("Capital record not found", 404)
         
     def delete_capital(self,id):
         empty_city = {}
@@ -103,3 +101,19 @@ class Capital_Service:
         good_obj["continent"] = obj["continent"]
         return good_obj
 
+    def publish_capital(self,id,ob):
+        resp = self.get_capital(id)
+        if resp.status_code == 200:
+            ps_client = pubsub.Client()
+            print ob["topic"]
+            topic = ps_client.topic(ob["topic"])
+            city = resp.data
+            print city
+            data = city.encode ('utf-8')
+            message_id = topic.publish (data)
+            return make_response ("Successfully published to topic",200)
+        elif resp.status_code == 404: 
+            return make_response("Capital record not found", 404)
+
+
+        
