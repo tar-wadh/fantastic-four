@@ -29,7 +29,7 @@ def status():
     api_status["query"] = True
     api_status["search"] = True
     api_status["pubsub"] = True
-    api_status["storage"] = False
+    api_status["storage"] = True
 
     return jsonify(api_status), 200
 
