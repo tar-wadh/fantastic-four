@@ -49,7 +49,7 @@ def status():
 #
 #@app.route('/api/capitals/<id>/', methods=['PUT'])
 
-@app.route('/api/capitals/<id>/', methods=['GET','PUT', 'DELETE'])
+@app.route('/api/capitals/<id>', methods=['GET','PUT', 'DELETE'])
 def get_put_capital(id):
     if request.method == 'GET':
       return get_capital (int(id))
