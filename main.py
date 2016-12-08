@@ -10,6 +10,8 @@ from flask import jsonify, make_response
 import capital
 import utility
 import cloudstorage
+import boto
+from StringIO import StringIO
 
 app = Flask(__name__)
 
@@ -116,13 +118,14 @@ def store_capitals_gcs(id):
             return make_response("Capital record not found", 404)
     except Exception as e:
         return make_response("Unexpected error", 404)
-    
-    with open(id +'.txt', 'w') as outfile:
-        json.dump(cap_json, outfile) 
    
-    if gcs.store_file_to_gcs(bucket_name, id+'.txt'):
+    io = StringIO() 
+    json.dump(cap_json, io)
+    dst_uri = boto.storage_uri(bucket_name + '/' + id + '.txt', 'gs')
+    try:
+        dst_uri.new_key().set_contents_from_stream(io)
         return make_response("Successfully stored in GCS", 200)
-    else:
+    except Exception as e:
         return make_response("Unexpected error", 404)
 
 @app.errorhandler(500)

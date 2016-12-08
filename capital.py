@@ -38,7 +38,7 @@ class Capital_Service:
             query = self.ds.query(kind=self.kind)
             query.order = ['id']
             city = []
-            for ent in list(query.fetch(limit=5)):
+            for ent in list(query.fetch()):
                 city.append(dict(ent))
             results = []
             for c in city:

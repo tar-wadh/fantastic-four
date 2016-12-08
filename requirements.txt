@@ -1,5 +1,6 @@
 flask
 flask-cors
+boto
 gunicorn==19.6.0
 google-cloud
 google-api-python-client
