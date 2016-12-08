@@ -86,7 +86,9 @@ def delete_capital(id):
 @app.route('/api/capitals', methods=['GET'])
 def get_all_capitals():
     cap = capital.Capital_Service()
-    result = cap.fetch_capitals()
+    query_param = request.args.get('query','')
+    search_param = request.args.get('search','')
+    result = cap.fetch_capitals(query_param,search_param)
     return result
 
 @app.route('/api/capitals/<id>/publish', methods=['POST'])

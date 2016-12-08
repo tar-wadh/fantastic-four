@@ -30,25 +30,39 @@ class Capital_Service:
         except Exception as e:
             return jsonify (empty_city)
 
-    def fetch_capitals(self):
-        empty_city = {}
-        empty_city["code"] = 0
-        empty_city["message"] = "string"
-        try:
+    def fetch_capitals(self,query_param,search_param):
+        #try:
             query = self.ds.query(kind=self.kind)
-            query.order = ['id']
+            if query_param:
+                query_split = query_param.split(':')
+                query_index = query_split[0]
+                query_value = query_split[1]
+                if query_index == "id":
+                    query_value = int(query_value)
+                elif query_index == "latitude" or query_index == "longitude":
+                    query_value = float(query_value)
+                query.add_filter(query_index,'=',query_value)
+            else:
+                query.order = ['id']
+
             city = []
             for ent in list(query.fetch()):
-                city.append(dict(ent))
+                if search_param:
+                    found = self.search_dict(dict(ent),search_param)
+                    if found:
+                        city.append(dict(ent))
+                else:
+                    city.append(dict(ent))
+
             results = []
             for c in city:
               results.append(self.good_json(c))
             if len(city) != 0:
                 return jsonify(results),200
             else:
-                return jsonify (empty_city),404
-        except Exception as e:
-            return jsonify (empty_city)
+                return make_response("Capital record not found", 404)
+        #except Exception as e:
+            return make_response("Unexpected error", 405)
 
     def get_capital(self,id):
         try:
@@ -117,6 +131,12 @@ class Capital_Service:
         elif resp.status_code == 404: 
             return make_response("Capital record not found", 404)
         return make_response("Unexpected error", 400)
+
+    def search_dict(self,good_obj,val):
+        found = False
+        if str(good_obj["name"]) == val or str(good_obj["countryCode"]) == val or str(good_obj["country"]) == val or str(good_obj["id"]) == val or str(good_obj["latitude"]) == val or str(good_obj["longitude"]) == val or str(good_obj["continent"]) == val:
+            found = True
+        return found
 
 
         
