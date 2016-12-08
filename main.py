@@ -5,10 +5,11 @@ import json
 import base64
 
 from flask import Flask, request, g
-from flask import jsonify
+from flask import jsonify, make_response
 
 import capital
 import utility
+import cloudstorage
 
 app = Flask(__name__)
 
@@ -92,6 +93,37 @@ def publish(id):
     result = cap.publish_capital(int(id),ob)
     return result
 
+@app.route('/api/capitals/<id>/store', methods=['POST'])
+def store_capitals_gcs(id):
+    gcs = cloudstorage.Storage()  
+    content = request.get_json()
+    bucket_name = content["bucket"]
+    gcs.create_bucket(bucket_name)
+   
+    cap = capital.Capital_Service()
+    empty_city = {}
+    empty_city["code"] = 0
+    empty_city["message"] = "string"
+    try:
+        query = cap.ds.query(kind=cap.kind)
+        query.add_filter('id','=',int(id))
+        city = []
+        for ent in list(query.fetch()):
+    	    city.append(dict(ent))
+        if len(city) != 0:
+            cap_json = cap.good_json(city[0])
+        else:
+            return make_response("Capital record not found", 404)
+    except Exception as e:
+        return make_response("Unexpected error", 404)
+    
+    with open(id +'.txt', 'w') as outfile:
+        json.dump(cap_json, outfile) 
+   
+    if gcs.store_file_to_gcs(bucket_name, id+'.txt'):
+        return make_response("Successfully stored in GCS", 200)
+    else:
+        return make_response("Unexpected error", 404)
 
 @app.errorhandler(500)
 def server_error(err):
