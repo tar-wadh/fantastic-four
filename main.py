@@ -25,6 +25,8 @@ def status():
     api_status["fetch"] = True
     api_status["delete"] = True
     api_status["list"] = True
+    api_status["query"] = True
+    api_status["search"] = True
     api_status["pubsub"] = True
     api_status["storage"] = False
 

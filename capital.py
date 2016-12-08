@@ -102,16 +102,21 @@ class Capital_Service:
         return good_obj
 
     def publish_capital(self,id,ob):
-        resp = self.get_capital(id)
-        if resp.status_code == 200:
-            ps_client = pubsub.Client()
-            topic = ps_client.topic(ob["topic"])
-            city = resp.data
-            data = city.encode ('utf-8')
-            message_id = topic.publish (data)
-            return make_response ("Successfully published to topic",200)
-        elif resp.status_code == 404: 
-            return make_response("Capital record not found", 404)
+        try:
+            resp = self.get_capital(id)
+            if resp.status_code == 200:
+                ps_client = pubsub.Client()
+                topic = ps_client.topic(ob["topic"])
+                city = resp.data
+                data = city.encode ('utf-8')
+                message_id = topic.publish (data)
+                res = {}
+                res["messageId"] = message_id
+                return make_response (jsonify (res),200)
+            elif resp.status_code == 404: 
+                return make_response("Capital record not found", 404)
+        except Exception as e:
+            return make_response("Unexpected error", 400)
 
 
         
