@@ -3,9 +3,10 @@
 import logging
 import json
 import base64
+import geojson
 
 from flask import Flask, request, g
-from flask import jsonify, make_response
+from flask import jsonify, make_response, render_template
 
 import capital
 import utility
@@ -95,6 +96,25 @@ def publish(id):
     ob = request.get_json()
     result = cap.publish_capital(int(id),ob)
     return result
+
+@app.route('/api/capitals/map', methods=['GET'])
+def create_map():
+    cap = capital.Capital_Service()
+    query = cap.ds.query(kind=cap.kind)
+    query.order = ['id']
+    city = []
+    for ent in list(query.fetch()):
+        city.append(dict(ent))
+    features = []
+    for c in city:
+        point = geojson.Point((float(c['longitude']), float(c['latitude'])))
+        feature = geojson.Feature(geometry = point)
+        features.append(feature)
+    collection = geojson.FeatureCollection(features)
+    dump = geojson.dumps(collection)
+    print(dump)
+    return render_template('map_template.html', geocode=dump)    
+
 
 @app.route('/api/capitals/<id>/store', methods=['POST'])
 def store_capitals_gcs(id):

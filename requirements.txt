@@ -1,6 +1,6 @@
 flask
 flask-cors
-boto
+geojson
 gunicorn==19.6.0
 google-cloud
 google-api-python-client
