@@ -12,6 +12,7 @@ import utility
 import cloudstorage
 import boto
 from StringIO import StringIO
+from google.cloud.storage import Blob
 
 app = Flask(__name__)
 
@@ -118,12 +119,11 @@ def store_capitals_gcs(id):
             return make_response("Capital record not found", 404)
     except Exception as e:
         return make_response("Unexpected error", 404)
-   
-    io = StringIO() 
-    json.dump(cap_json, io)
-    dst_uri = boto.storage_uri(bucket_name + '/' + id + '.txt', 'gs')
+
+    bucket = gcs.gcs.get_bucket(bucket_name)
+    blob = bucket.blob(id)   
     try:
-        dst_uri.new_key().set_contents_from_stream(io)
+        blob.upload_from_string(data=json.dumps(cap_json))
         return make_response("Successfully stored in GCS", 200)
     except Exception as e:
         return make_response("Unexpected error", 404)
