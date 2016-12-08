@@ -112,7 +112,7 @@ class Capital_Service:
             data = city.encode ('utf-8')
             message_id = topic.publish (data)
             res = {}
-            res["messageId"] = message_id
+            res["messageId"] = int(message_id)
             return make_response (jsonify (res),200)
         elif resp.status_code == 404: 
             return make_response("Capital record not found", 404)
