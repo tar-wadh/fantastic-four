@@ -105,10 +105,8 @@ class Capital_Service:
         resp = self.get_capital(id)
         if resp.status_code == 200:
             ps_client = pubsub.Client()
-            print ob["topic"]
             topic = ps_client.topic(ob["topic"])
             city = resp.data
-            print city
             data = city.encode ('utf-8')
             message_id = topic.publish (data)
             return make_response ("Successfully published to topic",200)
