@@ -15,7 +15,7 @@ class Capital_Service:
         empty_city["code"] = 0
         empty_city["message"] = "string"
         try:
-            key = self.ds.key(self.kind)
+            key = self.ds.key(self.kind, id)
             entity = datastore.Entity(key)
             entity["name"] = data["name"]
             entity["countryCode"] = data["countryCode"]
@@ -24,9 +24,8 @@ class Capital_Service:
             entity["latitude"] = data["location"]["latitude"]
             entity["longitude"] = data["location"]["longitude"]
             entity["continent"] = data["continent"]
-            self.ds.put(entity)
-            return  make_response("Successfully stored the capital", 200)
-            #return jsonify("Successfully stored the capital"),200 
+            self.ds.put(entity)        
+            return jsonify("Successfully stored the capital"),200 
         except Exception as e:
             return jsonify (empty_city)
 
