@@ -33,6 +33,7 @@ class Capital_Service:
     def fetch_capitals(self,query_param=None,search_param=None):
         #try:
             query = self.ds.query(kind=self.kind)
+            query_list = []
             if query_param:
                 query_split = query_param.split(':')
                 query_index = query_split[0]
@@ -42,11 +43,13 @@ class Capital_Service:
                 elif query_index == "latitude" or query_index == "longitude":
                     query_value = float(query_value)
                 query.add_filter(query_index,'=',query_value)
+                query_list = list (query.fetch())
             else:
                 query.order = ['id']
+                query_list = list (query.fetch(limit=20))
 
             city = []
-            for ent in list(query.fetch()):
+            for ent in query_list:
                 if search_param:
                     found = self.search_dict(dict(ent),search_param)
                     if found:
