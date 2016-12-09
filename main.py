@@ -11,7 +11,6 @@ from flask import jsonify, make_response, render_template
 import capital
 import utility
 import cloudstorage
-import boto
 from StringIO import StringIO
 from google.cloud.storage import Blob
 
@@ -23,7 +22,7 @@ def hello_world():
     """hello world"""
     return 'Hello World!'
 
-@app.route("/map")
+@app.route('/api/capitals/map/polymer', methods=['GET'])
 def map():
     cap = capital.Capital_Service()
     query = cap.ds.query(kind=cap.kind)

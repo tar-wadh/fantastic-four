@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Custom map projections</title>
+    <title>Fantastic capitals map of the world!</title>
     <style>
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
@@ -16,8 +16,7 @@
         padding: 0;
       }
       #coords {
-        background-color: black;
-        color: white;
+        color: black;
         padding: 5px;
         font-size: 2.5em;
       }
@@ -36,12 +35,14 @@
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 2,
           center: {lat: 0, lng: 0},
-          mapTypeControl: false
+          zoomControl: true,
+		  scaleControl: true,
+          mapTypeControl: true
         });
-
-        initGallPeters();
+		initGallPeters();
         map.mapTypes.set('gallPeters', gallPetersMapType);
         map.setMapTypeId('gallPeters');
+        map.setMapTypeId('terrain')
 
         // Show the lat and lng under the mouse cursor.
         var coordsDiv = document.getElementById('coords');
@@ -64,8 +65,8 @@
 
       var gallPetersMapType;
       function initGallPeters() {
-        var GALL_PETERS_RANGE_X = 800;
-        var GALL_PETERS_RANGE_Y = 512;
+        var GALL_PETERS_RANGE_X = 750;
+        var GALL_PETERS_RANGE_Y = 500;
 
         // Fetch Gall-Peters tiles stored locally on our server.
         gallPetersMapType = new google.maps.ImageMapType({
