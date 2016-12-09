@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="/static/bower_components/platform/platform.js"></script>
+    <meta charset="utf-8">
+    <title>title</title>
+    <!--I am loading the elements just as I would a stylesheet-->
+<!--     <link rel="import" href="/static/bower_components/paper-button/paper-button.html"> -->
+    <link rel="import" href="/static/bower_components/google-map/google-map.html">
+    <link rel="import" href="/static/bower_components/google-map/google-map-marker.html">
+    <link rel="import" href="/static/bower_components/polymer/polymer.html">
+    
+    <style>
+      html, body {
+        height:100%;
+      }
+      google-map {
+        display: block;
+        height: 100%;
+        width:100%;
+      }
+    </style>
+  </head>
+  <body>
+
+    <google-map latitude="0" longitude="0" zoom="2">
+{% for lat,long in lat_long %}
+<google-map-marker latitude={{lat}} longitude={{long}} draggable="true"></google-map-marker>
+{% endfor %}
+</google-map>
+  
+  </body>
+</html>
+

@@ -23,6 +23,21 @@ def hello_world():
     """hello world"""
     return 'Hello World!'
 
+@app.route("/map")
+def map():
+    cap = capital.Capital_Service()
+    query = cap.ds.query(kind=cap.kind)
+    query.order = ['id']
+    city = []
+    for ent in list(query.fetch()):
+        city.append(dict(ent))
+    lat = []
+    lon = []
+    for c in city:
+        lat.append( str(c['longitude']))
+        lon.append( str(c['latitude']))
+    return render_template('map.html', lat_long=zip(lat,lon))
+
 @app.route('/api/status', methods=['GET'])
 def status():
     api_status = {}
