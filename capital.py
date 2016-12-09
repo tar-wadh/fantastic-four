@@ -30,7 +30,7 @@ class Capital_Service:
         except Exception as e:
             return jsonify (empty_city)
 
-    def fetch_capitals(self,query_param,search_param):
+    def fetch_capitals(self,query_param=None,search_param=None):
         #try:
             query = self.ds.query(kind=self.kind)
             if query_param:
@@ -137,6 +137,14 @@ class Capital_Service:
         if str(good_obj["name"]) == val or str(good_obj["countryCode"]) == val or str(good_obj["country"]) == val or str(good_obj["id"]) == val or str(good_obj["latitude"]) == val or str(good_obj["longitude"]) == val or str(good_obj["continent"]) == val:
             found = True
         return found
+
+    def get_list (self):
+        query = self.ds.query(kind=self.kind)
+        query.order = ['country']
+        city = []
+        for ent in list(query.fetch()):
+              city.append(dict(ent))
+        return city
 
 
         
