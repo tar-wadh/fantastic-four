@@ -44,24 +44,30 @@ class Capital_Service:
                     query_value = float(query_value)
                 query.add_filter(query_index,'=',query_value)
                 query_list = list (query.fetch())
+            elif search_param:
+                query_list = list (query.fetch())
             else:
                 query.order = ['id']
                 query_list = list (query.fetch(limit=20))
 
             city = []
-            for ent in query_list:
-                if search_param:
+            if search_param:
+                for ent in query_list:
                     found = self.search_dict(dict(ent),search_param)
                     if found:
                         city.append(dict(ent))
-                else:
+                        break
+
+            else:
+                for ent in query_list:
                     city.append(dict(ent))
 
             results = []
             for c in city:
               results.append(self.good_json(c))
+
             if len(city) != 0:
-                return jsonify(results),200
+                return make_response (jsonify(results),200)
             else:
                 return make_response("Capital record not found", 404)
         #except Exception as e:
