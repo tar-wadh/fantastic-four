@@ -107,6 +107,12 @@ def get_all_capitals():
     result = cap.fetch_capitals(query_param,search_param)
     return result
 
+@app.route('/api/capitals/list', methods=['GET'])
+def capital_list():
+    cap = capital.Capital_Service()
+    entries= cap.get_list()
+    return render_template('list_template.html',entries=entries)
+
 @app.route('/api/capitals/<id>/publish', methods=['POST'])
 def publish(id):
     cap = capital.Capital_Service()
