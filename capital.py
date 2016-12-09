@@ -143,7 +143,13 @@ class Capital_Service:
         query.order = ['country']
         city = []
         for ent in list(query.fetch()):
-              city.append(dict(ent))
+              ob = dict(ent)
+              new_ob = {}
+              new_ob["country"] = ob["country"]
+              new_ob["name"] = ob["name"]
+              if new_ob not in city:
+                  city.append(new_ob)
+
         return city
 
 
