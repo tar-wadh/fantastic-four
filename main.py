@@ -113,9 +113,7 @@ def create_map():
         feature = geojson.Feature(geometry = point)
         features.append(feature)
     collection = geojson.FeatureCollection(features)
-    dump = geojson.dumps(collection)
-    print(dump)
-    return render_template('map_template.html', geocode=dump)    
+    return render_template('map_template.html', geocode=collection)    
 
 
 @app.route('/api/capitals/<id>/store', methods=['POST'])
