@@ -33,8 +33,8 @@ def map():
     lat = []
     lon = []
     for c in city:
-        lat.append( str(c['longitude']))
-        lon.append( str(c['latitude']))
+        lon.append( str(c['longitude']))
+        lat.append( str(c['latitude']))
     return render_template('map.html', lat_long=zip(lat,lon))
 
 @app.route('/api/status', methods=['GET'])
